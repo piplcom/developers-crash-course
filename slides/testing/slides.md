@@ -47,7 +47,7 @@
 
 ## Integration Tests
 
-- Testing multiple modules as a groupcombined as a group
+- Testing multiple modules combined as a group
 - Without any interaction with external dependencies (e.g., DB, sockets)
 - Goal: check if different modules are working fine when combined
 
@@ -109,7 +109,7 @@
 ----
 
 ## Integration Tests
-- User sees welcome message after enering valid values and clicking the button <!-- .element: class="fragment" -->
+- User sees welcome message after entering valid values and clicking the button <!-- .element: class="fragment" -->
 - User is navigated to the welcome page after valid entry and clicking the button <!-- .element: class="fragment" -->
 
 ---
@@ -121,7 +121,7 @@
 
 ## Why faking?
 
-- Often, our code is depdent on external components
+- Often, our code is dependent on external units
   - For example: DB connection, sockets, files etc.
 - Our code should be loosly coupled with dependecies
 - Otherwise, tests are expensive and time consuming:
@@ -131,29 +131,25 @@
 
 ----
 
-## How do we fake?
+# How do we fake? <!-- .element: style="-webkit-text-stroke: 2px black" -->
+<!-- .slide: data-background-image="https://media.giphy.com/media/OqAeQrGmU7lS6tENnQ/giphy.gif" -->
+
+----
 
 ```scala
-class UserRepository {
-  val conn = DbConnection.create()
+class WeatherService {
+  val client = WeatherClient.createClient()
 
-  def getUserByID(id: UserID): User = {
-    val query = s"SELECT * FROM Users where id='$id'"
-    val results = conn.execute(query)
-
-    val user = convertResultToUser(results)
-
-    user
-  }
+  def getForecast() = client.getForecast()
 }
-```
 
-```scala
-def displayUser(id: UserID) = {
-  val users = new UserRepository()
-
-  val user = users.getUserByID(id)
-  println(s"your user is $user")
+def forecastToEmoji(ws: WeatherService) = {
+   ws.getForecast() match {
+    case Sunny  => "☀️"
+    case Cloudy => "⛅️"
+    case Rainy  => "🌧"
+    case Storm  => "🌪"
+  }
 }
 
 ```
@@ -163,45 +159,38 @@ def displayUser(id: UserID) = {
 ## Inject Dependencies
 
 ```scala
-trait UserRepository {
-  def getUserByID(id: UserID): User
+trait WeatherService {
+  def getForecast(): Forecast
 }
 ```
 
-```scala
-object UserRepositoryLive extends UserRepository{
-  val conn = DbConnection.create()
+```scala[|2|4-7]
+object WeatherServiceLive extends WeatherService {
+  val client = WeatherClient.createClient()
 
-  def getUserByID(id: UserID): User = {
-    val query = s"SELECT * FROM Users where id='$id'"
-    val results = conn.execute(query)
-
-    val user = convertResultToUser(results)
-
-    user
+  def getForecast() = {
+    client.getForecast()
   }
 }
 ```
 
 ----
 
-```scala
-object UserRepositoryMock extends UserRepository{
-  val userList: List[User] = List(
-    User(id = UserId(1), name: "Matan"),
-    User(id = UserId(2), name: "Diana"),
-  )
-
-  def getUserByID(id: UserID): User = {
-    userList.find(_.id == id)
-  }
+```scala[|2-4|7-8]
+class WeatherServiceMock(f: Forecast) 
+  extends WeatherService {
+    def getForecast() = f
 }
 ```
 
 ```scala
-def displayUser(id: UserID, users: UserRepository) = {
-  val user = users.getUserByID(id)
-  println(s"your user is $user")
+def forecastToEmoji(ws: WeatherService) = {
+   ws.getForecast() match {
+    case Sunny  => "☀️"
+    case Cloudy => "⛅️"
+    case Rainy  => "🌧"
+    case Storm  => "🌪"
+  }
 }
 
 ```
@@ -246,12 +235,14 @@ def displayUser(id: UserID, users: UserRepository) = {
 
 ----
 
-## 5 Steps of TDD
+## 3 Steps of TDD
+
+<img class="fragment" src="https://miro.medium.com/max/700/1*pP8Ks6tlt718jJg3fqrtvw.jpeg">
 
 ----
 
-## Write a test
-- Test should be written according to:
+## Write a test 
+- Test should be written according to: 
   - Documentation
   - Spec
   - Product requirements
@@ -259,16 +250,38 @@ def displayUser(id: UserID, users: UserRepository) = {
 
 ----
 
-## Test fail
-- Test is going to fail and is this OK
+## Test fail 
+- Test is going to fail and is this OK 
   - Because no implementation supports the test
 - The purpose of this step is to run tests before we do something 
 
 ----
 
 ## Write code 
-- Write just the coded needed to make the test passed
-- If the output is a `2`, you can return the number `2` (if it the expected result) 
+- Write just the coded needed to make the test passed 
+- If the output is a `2`, you can return the number `2` 
+  - If it is the expected result...
+
+----
+
+## Refactor
+- Update code to provide a general solution 
+- Now it is the time for optimizations
+
+----
+
+## Pros/Cons?
+
+- Pros 😎
+  - Tests are more accurate 
+  - Tests have higher coverage
+  - Code is always testable
+  - Test is not affected by the implementation
+  - Encourages loose coupling between components
+
+- Cons 👿
+  - Cannot "skip" test phase
+  - More complicated to do
 
 ---
 
@@ -315,3 +328,51 @@ def displayUser(id: UserID, users: UserRepository) = {
 - Writing tests for an already written code is boring.
 
 ---
+
+# Exercise
+<!-- .slide: data-background-image="https://media.giphy.com/media/mb8QpqfFX4CtO/giphy.gif" -->
+
+----
+
+## Prerequisites
+
+Run the `name-cleaner` container: 
+```bash
+  docker run --rm --name dap-name-cleaner \
+    -p 8080:8080 \
+    gcr.io/dev-collection/dap-name-cleaner:0.1.6
+```
+
+Send HTTP request:
+```sh
+curl -v localhost:8080/clean \
+-H "Content-Type: application/json" \
+-d '{
+      "names" : [
+        { "raw": "Juan Q. Xavier Velasquez y Garcia jr" }
+      ], "dsId" : 1 
+    }'
+```
+
+----
+
+## Welcome Our Users
+
+- Recieve a raw name from the user
+- Send the name to name cleaning service
+  - If prefix is `Dr`: `"hello Doctor ${name}"`
+  - If prefix is `Lord`: `"Wow!! Royal ${name}"`
+  - If suffix is `Jr`: `"${name} is a junior"`
+  - Otherwise: `"${name} is a common person"`
+
+
+----
+
+### Test your function
+  - Write proper unit tests
+  - 1st round: mock the usage of name-cleaner
+  - 2nd round: Use name-cleaner test container  
+  - What are the pros/cons of both approaches?
+
+
+  
