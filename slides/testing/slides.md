@@ -176,7 +176,7 @@ object WeatherServiceLive extends WeatherService {
 
 ----
 
-```scala[|2-4|7-8]
+```scala
 class WeatherServiceMock(f: Forecast) 
   extends WeatherService {
     def getForecast() = f
@@ -195,7 +195,12 @@ def forecastToEmoji(ws: WeatherService) = {
 
 ```
 
+---
+
+# Test Containers 🐳
+
 ----
+
 
 ## Test Containers
 
@@ -205,10 +210,6 @@ def forecastToEmoji(ws: WeatherService) = {
   - Elimination of network behavior
 - Sometimes we have to artifically inject dependencies
   - Affects our API
-
-----
-
-# Test Containers 🐳
 
 ----
 
@@ -241,7 +242,7 @@ def forecastToEmoji(ws: WeatherService) = {
 
 ----
 
-## Write a test 
+## Write a test <!-- .element: style="color: red" -->
 - Test should be written according to: 
   - Documentation
   - Spec
@@ -250,21 +251,21 @@ def forecastToEmoji(ws: WeatherService) = {
 
 ----
 
-## Test fail 
+## Test fail <!-- .element: style="color: red" -->
 - Test is going to fail and is this OK 
   - Because no implementation supports the test
 - The purpose of this step is to run tests before we do something 
 
 ----
 
-## Write code 
+## Write code <!-- .element: style="color: green" -->
 - Write just the coded needed to make the test passed 
 - If the output is a `2`, you can return the number `2` 
   - If it is the expected result...
 
 ----
 
-## Refactor
+## Refactor <!-- .element: style="color: cornflowerblue" -->
 - Update code to provide a general solution 
 - Now it is the time for optimizations
 
@@ -338,7 +339,9 @@ def forecastToEmoji(ws: WeatherService) = {
 
 Run the `name-cleaner` container: 
 ```bash
-  docker run --rm --name dap-name-cleaner \
+  docker run \
+    --rm \
+    --name dap-name-cleaner \
     -p 8080:8080 \
     gcr.io/dev-collection/dap-name-cleaner:0.1.6
 ```
