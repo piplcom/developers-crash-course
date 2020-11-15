@@ -1,5 +1,7 @@
-## The Art of
-# Clean Code
+## The Art of <!-- .element: style="-webkit-text-stroke: 2px black" -->
+# Clean Code  <!-- .element: style="-webkit-text-stroke: 2px black" -->
+
+<!-- .slide: data-background-image="https://media.giphy.com/media/26tn33aiTi1jkl6H6/giphy.gif" -->
 
 ---
 
@@ -22,7 +24,7 @@
 
 <img src="https://i2.wp.com/commadot.com/wp-content/uploads/2009/02/wtf.png?w=550&ssl=1">
 
----
+----
 
 # Clean Code
 - Does one thing very *well*
@@ -31,7 +33,7 @@
 - <span style="color:green">Easy</span>: write a code that a computer understands
 - <span style="color:red">Hard</span>: write a code that a human can understand
 
----
+----
 
 ## Clean Code Matters
 True cost of software == its maintenance
@@ -43,12 +45,15 @@ True cost of software == its maintenance
 # Clean Code Matters
 We READ 10x more time than we WRITE
 
-Boyscout rule: 
-Always check cleaner code than you found
+<br>
+
+### Boyscout rule  🏅 <!-- .element class="fragment" data-fragment-index="1" -->
+Always check-in cleaner code than you found <!-- .element class="fragment" data-fragment-index="1" -->
 
 ---
 
-# Naming
+# Naming <!-- .element: style="-webkit-text-stroke: 2px black" -->
+<!-- .slide: data-background-image="https://media.giphy.com/media/l1J9HZ1tyyIbPxFHG/giphy.gif" -->
 
 ----
 
@@ -56,7 +61,7 @@ Always check cleaner code than you found
 
 - Functions are verbs
     - `product(), transaction()` <!-- .element: class="fragment strike" -->
-    - `searchProduct(), doTransaction()` <!-- .element: class="fragment" -->
+    - <!-- .element: class="fragment" --> `searchProduct(), doTransaction()`
 - <!-- .element: class="fragment" --> Boolean names should answer yes/no:
     - `isGoldClient()`
     - `isHostValid()`
@@ -124,10 +129,10 @@ Uncle Bob
 ----
 
 ## Functions
-### How Small?
-- ~10-20 lines <!-- .element: class="fragment" -->
-- By any means, smaller than a page of your IDE <!-- .element: class="fragment" -->
-- <span> Be sure that they just do <span style="color:red"> one </span> thing </span> <!-- .element: class="fragment" -->
+### How Small? <!-- .element: class="fragment" -->
+- <!-- .element: class="fragment" --> ~10-20 lines 
+- <!-- .element: class="fragment" --> By any means, smaller than a page of your IDE 
+- <!-- .element: class="fragment" --> Be sure that they just do <span style="color:red"> one </span> thing
 
 ----
 
@@ -218,6 +223,21 @@ Point(r: Double, θ: Double)
 ----
 
 ### Solution: factory methods!
+
+```scala[1|4|5-9|]
+class Point private (x: Double, y: Double) { }
+
+object Point {
+  def fromCartesian(x: Double, y: Double) = new Point(x, y)
+  def fromPolar(r: Double, θ: Double) = {
+    new Point(
+      x = r * cos(θ), 
+      y = r * sin(θ)
+    )
+  }
+}
+```
+
 ```scala
 // Perfectly reasonable
 val p1 = Point.fromCartesian(1.0, 2.0)
@@ -231,7 +251,7 @@ val p2 = Point.fromPolar(3.0, 4.0)
 - 1 argument is just fine <!-- .element: class="fragment" -->
 - 2 arguments are okay <!-- .element: class="fragment" -->
 - 3 arguments should be used with really good reason <!-- .element: class="fragment" -->
-- 4 arguments is BAD <!-- .element: class="fragment" -->
+- <!-- .element: class="fragment" --> 4 arguments is <span style="color:red"> BAD </span> 
 
 ----
 
@@ -321,7 +341,7 @@ def updateUser(request: Request) = {
 - Explain yourself in code
 
 - Bad:
-<pre><code class="scala" style="width: 700px;" data-trim>
+<pre><code class="scala" style="width: 750px;" data-trim>
 // check if employee is eligible for full benefits
 if ( (employee.kind == HOURLY) && (employee.age > 65) )
 </code>
@@ -445,6 +465,7 @@ private val properties = List()
 def measureLine(line: String) = {
     val lineSize = line.size()
     totalChars += lineSize
+
     lineWidthHistogram.addLine(lineSize, totalChars)
     recordWidestLine(lineSize)
 }
@@ -454,3 +475,16 @@ def root2(a: Int, b: Int, c: Int) = {
     (-b - sqrt(determinant)) / (2*a)
 }
 ```
+
+---
+
+# Exercise <!-- .element: style="-webkit-text-stroke: 2px black" -->
+<!-- .slide: data-background-image="https://media.giphy.com/media/BIPRDoFF8DbPi/giphy.gif" -->
+
+----
+
+## Gilded Rose Refactoring Kata
+<!-- .slide: data-background-image="https://vignette.wikia.nocookie.net/wowwiki/images/8/8b/The_Gilded_Rose.jpg/revision/latest?cb=20071222074445" data-background-opacity="0.3" -->
+
+- Description: https://github.com/NotMyself/GildedRose
+- Code: https://github.com/emilybache/GildedRose-Refactoring-Kata
