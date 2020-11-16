@@ -26,7 +26,7 @@
 
 ----
 
-# Clean Code
+# Clean Code 🧹
 - Does one thing very *well*
 - Reads like a well written prose (cliché but true)
 - Was written by someone who cared
@@ -69,13 +69,13 @@ Always check-in cleaner code than you found <!-- .element class="fragment" data-
 ----
 
 ## Classes
-- Classes are nouns
+- <!-- .element: class="fragment" --> Classes are nouns 
     - Customer, OrderDetails, OrderFacade
     
-- Avoid meaningless names
+- <!-- .element: class="fragment" --> Avoid meaningless names
     - ~~`OrderInfo`~~, ~~`OrderData`~~
     - `Order`
-- Delete the interfaces:
+- <!-- .element: class="fragment" --> Delete the interfaces:
     - ~~`ICustomerService`~~, ~~`OrderServiceImpl`~~
 
 ----
@@ -146,6 +146,34 @@ removeOrders(customer, false, true)
 ```scala
 if (customer != null) {...} else {...}
 ```
+
+----
+
+### If boolean parameters are must to have
+
+#### Bad 😢 <!-- .element: class="fragment" data-fragment-index="1" -->
+```scala 
+removeOrders(customer, false, true)
+``` 
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+#### Good 😊 <!-- .element: class="fragment" data-fragment-index="2" -->
+
+```scala 
+removeOrders(customer, waitForAck = false, quorum = true)
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+#### Excellent 🤩 <!-- .element: class="fragment" data-fragment-index="3" -->
+
+```scala
+removeOrders(
+  fromCustomer = customer, 
+  waitForAck   = false, 
+  quorum       = true
+)
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
 
 ----
 
@@ -334,6 +362,11 @@ def updateUser(request: Request) = {
 
 ---
 
+# Comments <!-- .element: style="-webkit-text-stroke: 2px black" -->
+<!-- .slide: data-background-color="black" data-background-image="https://media.giphy.com/media/vinApXdZo4P72/giphy.gif" data-background-size="80%" -->
+
+----
+
 ## Comments
 
 - Comments do not make up for bad code
@@ -360,7 +393,14 @@ if ( isEligibleForFullBenefits(employee) )
     - ```scala
     /* Very important comment from 10 years ago */
     ```
-    - In other words: comments LIE!
+
+----
+
+<!-- .slide: data-background-color="black" data-background-image="https://media.giphy.com/media/hTC97U6cOu05Ur3Vij/giphy.gif"  -->
+## In other words:
+# Comments LIE!
+
+
 
 ----
 
@@ -423,7 +463,7 @@ val lifecycle: LifecycleSupport = new LifecycleSupport(this)
 
 ---
 
-# Formatting
+# Formatting 📝
 
 ----
 
@@ -431,7 +471,7 @@ val lifecycle: LifecycleSupport = new LifecycleSupport(this)
 - The purpose of formatting is <span style="color:red"> communication </span>
 - The newspaper metahpor 📰 
   - High level → details
-- Vertical openness between concepts
+- <!-- .element: class="fragment" --> Vertical openness between concepts
   - Each blank line is a visual cue
   - Identifies a new and a separate concept
 
@@ -474,6 +514,35 @@ def root2(a: Int, b: Int, c: Int) = {
     val determinant = determinant(a, b, c)
     (-b - sqrt(determinant)) / (2*a)
 }
+```
+
+----
+
+## Formatting Example
+
+```scala[|2|4-5|7-8|10|12|15-17|19-21]
+def handleRequest(input: Input) = {
+    logger.info(s"received input $input")
+
+    val currTime = System.currentTimeMillis
+    val fooResult = foo(currTime)
+
+    val payload = input.payload
+    val barResult = bar(payload)
+
+    logger.info(s"result = $barResult")
+
+    barResult
+}
+
+def foo(time: Long) = { 
+    // magic ...
+}
+
+def bar(text: String) = { 
+    // more magic ...
+ }
+
 ```
 
 ---
