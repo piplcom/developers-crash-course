@@ -1,5 +1,11 @@
-## The Art of
-# Clean Code
+## The Art of <!-- .element: style="-webkit-text-stroke: 2px black" -->
+# Clean Code  <!-- .element: style="-webkit-text-stroke: 2px black" -->
+
+Matan Keidar
+
+<!-- .slide: data-background-image="https://media.giphy.com/media/26tn33aiTi1jkl6H6/giphy.gif" -->
+
+<img src="https://assets-global.website-files.com/5d84dd1eb32e460fb41fbbdd/5da64dd3bb438c046c3320dc_pipl_logo_blue.svg" width="80px">
 
 ---
 
@@ -20,43 +26,54 @@
 
 ## Why clean code matters?
 
-<img src="https://i2.wp.com/commadot.com/wp-content/uploads/2009/02/wtf.png?w=550&ssl=1">
+<img src="https://i2.wp.com/commadot.com/wp-content/uploads/2009/02/wtf.png?w=550&ssl=1"> 
 
----
-
-# Clean Code
-- Does one thing very *well*
-- Reads like a well written prose (cliché but true)
-- Was written by someone who cared
-- <span style="color:green">Easy</span>: write a code that a computer understands
-- <span style="color:red">Hard</span>: write a code that a human can understand
-
----
+----
 
 ## Clean Code Matters
 True cost of software == its maintenance
 
-<img src="https://www.researchgate.net/profile/Eduardo_Franco11/publication/306363434/figure/fig3/AS:397858684588035@1471868310610/Software-product-maintainability-behavior-over-time.png" height=10% width=80%>
+<img src="https://www.researchgate.net/profile/Eduardo_Franco11/publication/306363434/figure/fig3/AS:397858684588035@1471868310610/Software-product-maintainability-behavior-over-time.png" height=10% width=80%> <!-- .element class="fragment fade-up" data-fragment-index="0" -->
 
 ----
 
 # Clean Code Matters
 We READ 10x more time than we WRITE
 
-Boyscout rule: 
-Always check cleaner code than you found
+<br>
 
----
-
-# Naming
+### Boyscout rule 🏅 <!-- .element class="fragment" data-fragment-index="1" -->
+Always check-in cleaner code than you found <!-- .element class="fragment" data-fragment-index="1" -->
 
 ----
 
-## Functions
+# Clean Code 🧹
+- Does one thing very *well*
+- Reads like a well written prose (cliché but true)
+- Was written by someone who cared
+- <span style="color:green">Easy</span>: write a code that a computer understands
+- <span style="color:red">Hard</span>: write a code that a human can understand
 
-- Functions are verbs
+----
+
+## What prevents clean code?
+Number 1 reason: 
+> "I'll clean it up later." <!-- .element class="fragment" -->
+
+Pro tip: "Later" never comes. 🤦‍♂️ <!-- .element class="fragment" -->
+
+---
+
+# Naming <!-- .element: style="-webkit-text-stroke: 2px black" -->
+<!-- .slide: data-background-image="https://media.giphy.com/media/l1J9HZ1tyyIbPxFHG/giphy.gif" -->
+
+----
+
+## Functions 
+
+- Functions are verbs 
     - `product(), transaction()` <!-- .element: class="fragment strike" -->
-    - `searchProduct(), doTransaction()` <!-- .element: class="fragment" -->
+    - searchProduct(), doTransaction() <!-- .element: class="fragment" -->
 - <!-- .element: class="fragment" --> Boolean names should answer yes/no:
     - `isGoldClient()`
     - `isHostValid()`
@@ -64,13 +81,13 @@ Always check cleaner code than you found
 ----
 
 ## Classes
-- Classes are nouns
+- <!-- .element: class="fragment" --> Classes are nouns 
     - Customer, OrderDetails, OrderFacade
     
-- Avoid meaningless names
+- <!-- .element: class="fragment" --> Avoid meaningless names
     - ~~`OrderInfo`~~, ~~`OrderData`~~
     - `Order`
-- Delete the interfaces:
+- <!-- .element: class="fragment" --> Delete the interfaces:
     - ~~`ICustomerService`~~, ~~`OrderServiceImpl`~~
 
 ----
@@ -101,10 +118,48 @@ Unless it's a basic business concept  (like VAT) <!-- .element: class="fragment"
 
 ----
 
+### Names should be Searchable 🕵️‍♂️
+
+- This is one of our daily routines
+- Make it easy on yourself and other team members
+
+----
+
 ### Names should be consistent
 `find()`,`fetch()` or `get()`?
 
 Stick to naming conventions
+
+----
+
+### Naming Considerations
+- Should we use variable type in its name?
+  ```scala
+    val parentAccount: Account
+    val resetButton: Button
+  ```
+
+- Plural names for arrays/collections:
+  - List/Set can be omitted if contain unique type
+  ```scala
+  val users: List[User] // and not userList
+  val followUps: List[FollowUp]
+  val accoundIds: Set[Id]
+  ```
+
+----
+
+## No Magic Numbers 🪄
+- Use constants instead of hard-coded literals
+  ```scala
+  val DAYS_IN_WEEK = 7
+  val COMPANY_CODE_ITALY = 485
+  ```
+- Give them descriptive names
+- Convention: defined at the top of the scope
+- <!-- .element: class="fragment" --> Easier to reason about the code
+- <!-- .element: class="fragment" --> Easier to update values
+- <!-- .element: class="fragment" --> Easier to test 
 
 ---
 
@@ -124,10 +179,10 @@ Uncle Bob
 ----
 
 ## Functions
-### How Small?
-- ~10-20 lines <!-- .element: class="fragment" -->
-- By any means, smaller than a page of your IDE <!-- .element: class="fragment" -->
-- <span> Be sure that they just do <span style="color:red"> one </span> thing </span> <!-- .element: class="fragment" -->
+### How Small? <!-- .element: class="fragment" -->
+- <!-- .element: class="fragment" --> ~10-20 lines 
+- <!-- .element: class="fragment" --> By any means, smaller than a page of your IDE 
+- <!-- .element: class="fragment" --> Be sure that they just do <span style="color:red"> one </span> thing
 
 ----
 
@@ -141,6 +196,34 @@ removeOrders(customer, false, true)
 ```scala
 if (customer != null) {...} else {...}
 ```
+
+----
+
+### If boolean parameters are must to have
+
+#### Bad 😢 <!-- .element: class="fragment" data-fragment-index="1" -->
+```scala 
+removeOrders(customer, false, true)
+``` 
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+#### Good 😊 <!-- .element: class="fragment" data-fragment-index="2" -->
+
+```scala 
+removeOrders(customer, waitForAck = false, quorum = true)
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+#### Excellent 🤩 <!-- .element: class="fragment" data-fragment-index="3" -->
+
+```scala
+removeOrders(
+  fromCustomer = customer, 
+  waitForAck   = false, 
+  quorum       = true
+)
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
 
 ----
 
@@ -218,6 +301,21 @@ Point(r: Double, θ: Double)
 ----
 
 ### Solution: factory methods!
+
+```scala[1|4|5-9|]
+class Point private (x: Double, y: Double) { }
+
+object Point {
+  def fromCartesian(x: Double, y: Double) = new Point(x, y)
+  def fromPolar(r: Double, θ: Double) = {
+    new Point(
+      x = r * cos(θ), 
+      y = r * sin(θ)
+    )
+  }
+}
+```
+
 ```scala
 // Perfectly reasonable
 val p1 = Point.fromCartesian(1.0, 2.0)
@@ -231,7 +329,7 @@ val p2 = Point.fromPolar(3.0, 4.0)
 - 1 argument is just fine <!-- .element: class="fragment" -->
 - 2 arguments are okay <!-- .element: class="fragment" -->
 - 3 arguments should be used with really good reason <!-- .element: class="fragment" -->
-- 4 arguments is BAD <!-- .element: class="fragment" -->
+- <!-- .element: class="fragment" --> 4 arguments is <span style="color:red"> BAD </span> 
 
 ----
 
@@ -314,6 +412,54 @@ def updateUser(request: Request) = {
 
 ---
 
+## Clean Conditionals 
+
+----
+
+## Encapsulate conditionals
+### Bad 👿
+```scala
+if (timer.hasExpired && !timer.isRecurrent)
+``` 
+
+### Good 😇
+```scala
+if ( shouldBeDeleted(timer) )
+``` 
+
+----
+
+## Encapsulate Boundary conditionals
+### Bad 👿
+```scala
+if ( level + 1 < tags.size )
+``` 
+
+### Good 😇
+```scala
+if ( nextLevel < tags.size )
+``` 
+
+----
+
+## Avoid Negative conditionals
+### Bad 👿
+```scala
+if ( !followUpNeeded() )
+``` 
+
+### Good 😇
+```scala
+if ( followUpNotNeeded() )
+``` 
+
+---
+
+# Comments <!-- .element: style="-webkit-text-stroke: 2px black" -->
+<!-- .slide: data-background-color="black" data-background-image="https://media.giphy.com/media/vinApXdZo4P72/giphy.gif" data-background-size="80%" -->
+
+----
+
 ## Comments
 
 - Comments do not make up for bad code
@@ -321,7 +467,7 @@ def updateUser(request: Request) = {
 - Explain yourself in code
 
 - Bad:
-<pre><code class="scala" style="width: 700px;" data-trim>
+<pre><code class="scala" style="width: 750px;" data-trim>
 // check if employee is eligible for full benefits
 if ( (employee.kind == HOURLY) && (employee.age > 65) )
 </code>
@@ -340,7 +486,14 @@ if ( isEligibleForFullBenefits(employee) )
     - ```scala
     /* Very important comment from 10 years ago */
     ```
-    - In other words: comments LIE!
+
+----
+
+<!-- .slide: data-background-color="black" data-background-image="https://media.giphy.com/media/hTC97U6cOu05Ur3Vij/giphy.gif"  -->
+## In other words:
+# Comments LIE!
+
+
 
 ----
 
@@ -403,7 +556,7 @@ val lifecycle: LifecycleSupport = new LifecycleSupport(this)
 
 ---
 
-# Formatting
+# Formatting 📝
 
 ----
 
@@ -411,7 +564,7 @@ val lifecycle: LifecycleSupport = new LifecycleSupport(this)
 - The purpose of formatting is <span style="color:red"> communication </span>
 - The newspaper metahpor 📰 
   - High level → details
-- Vertical openness between concepts
+- <!-- .element: class="fragment" --> Vertical openness between concepts
   - Each blank line is a visual cue
   - Identifies a new and a separate concept
 
@@ -445,6 +598,7 @@ private val properties = List()
 def measureLine(line: String) = {
     val lineSize = line.size()
     totalChars += lineSize
+
     lineWidthHistogram.addLine(lineSize, totalChars)
     recordWidestLine(lineSize)
 }
@@ -454,3 +608,45 @@ def root2(a: Int, b: Int, c: Int) = {
     (-b - sqrt(determinant)) / (2*a)
 }
 ```
+
+----
+
+## Formatting Example
+
+```scala[|2|4-5|7-8|10|12|15-17|19-21]
+def handleRequest(input: Input) = {
+    logger.info(s"received input $input")
+
+    val currTime = System.currentTimeMillis
+    val fooResult = foo(currTime)
+
+    val payload = input.payload
+    val barResult = bar(payload)
+
+    logger.info(s"result = $barResult")
+
+    barResult
+}
+
+def foo(time: Long) = { 
+    // magic ...
+}
+
+def bar(text: String) = { 
+    // more magic ...
+ }
+
+```
+
+---
+
+# Exercise <!-- .element: style="-webkit-text-stroke: 2px black" -->
+<!-- .slide: data-background-image="https://media.giphy.com/media/BIPRDoFF8DbPi/giphy.gif" -->
+
+----
+
+## Gilded Rose Refactoring Kata
+<!-- .slide: data-background-image="https://vignette.wikia.nocookie.net/wowwiki/images/8/8b/The_Gilded_Rose.jpg/revision/latest?cb=20071222074445" data-background-opacity="0.3" -->
+
+- Description: https://github.com/NotMyself/GildedRose
+- Code: https://github.com/emilybache/GildedRose-Refactoring-Kata
