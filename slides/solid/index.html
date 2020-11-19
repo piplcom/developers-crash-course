@@ -1,0 +1,410 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>SOLID principals</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/moon.css" id="theme">
+		<link rel="stylesheet" href="css/solid.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+        <section>
+          
+          <section>
+            <h1 class="r-fit-text">S O L I D </h1>
+            <p class="fragment">is an acronym for the first five object-oriented design(OOD) principles by Robert C. Martin, popularly known as Uncle Bob</p>
+          </section>
+
+          <section>
+            <p class="fragment">So, what is SOLID and how does it help us write better code?</p>
+            <p class="fragment">Simply put, Martin's and Feathers' design principles encourage us to create more <span class="mark">maintainable</span>, <span class="mark">understandable</span>, and <span class="mark">flexible</span> software. Consequently, as our applications grow in size, we can reduce their complexity and save ourselves a lot of headaches further down the road!</p>
+          </section>
+          
+          <section>
+            <ul>
+              <li class="fragment"><span class="mark">S</span>ingle-responsibility principle</li>
+              <li class="fragment"><span class="mark">O</span>pen–closed principle</li>
+              <li class="fragment"><span class="mark">L</span>iskov substitution principle</li>
+              <li class="fragment"><span class="mark">I</span>nterface segregation principle</li>
+              <li class="fragment"><span class="mark">D</span>ependency inversion principle</li>
+            </ul>
+          </section>
+          
+          <section>
+            <h1>OOP</h1>
+            <ul>
+              <li class="fragment">Class - the definition of properties and methods</li>
+              <li class="fragment">Object - instance of class</li>
+              <li class="fragment">Interface - protocol or API</li>
+              <li class="fragment">Composition, Inheritance, Polymorphism</li>
+            </ul>
+          </section>
+          
+          <section>
+            <pre class="fragment">
+              <code data-trim data-noescape data-line-numbers>
+
+  interface Field {
+    public Boolean equals(Field field);
+    public int hash();
+  }
+              </code>
+            </pre>
+            <pre class="fragment"><code data-trim data-noescape data-line-numbers>
+  class Name implements Field {
+    public Boolean equals(Field field)() { ... }
+    public int hash() { ... }
+    public String name() { ... }
+  }
+</code></pre>
+<pre class="fragment"><code data-trim data-noescape data-line-numbers>
+  Name myName = new Name();
+  myName.equals(other);
+  myName.hash();
+  myName.name();
+  </code> </pre>
+          </section>
+          <section>
+  <pre class="fragment"><code data-trim data-noescape data-line-numbers="1-3|4|7-8">
+    public void run(Field field) {
+      field.equals(other);
+      field.hash();
+      field.name(); // not a method
+    }
+
+    Name myName = new Name();
+    run(myName);
+                </code>
+              </pre>
+
+          </section>
+          
+        </section>
+        
+        <section>
+          <section>
+            <h2>Single Responsibility Principle</h2>
+            <p class="fragment">This principle states that a class should only have one responsibility. Furthermore, it should only have one reason to change.</p>
+            <aside class="notes">
+              Ось изменений. Со временем видно. Через ваш класс
+              проходит только одна ось изменений.
+              Частое нарушение God object
+            </aside>
+          </section>
+          <section>
+            <h2>axis of change</h2>
+            <ul>
+              <li class="fragment">Add new Data Source</li>
+              <li class="fragment">Add new Merge Transformation</li>
+              <li class="fragment">Add new Field</li>
+            </ul>
+            <aside class="notes">
+              Add extraction plugin, add to ds table in DB, add to ds to service map
+              Add to config, add to factory
+              Add to record, add to parser / writer
+            </aside>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers>
+public class Record {
+  private Field name;
+  private Field address;
+  ...
+
+  public Boolean equals(Record other) {...}
+  public int hash() {...}
+}
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="8-9">
+public class Record {
+  private Field name;
+  private Field address;
+  ...
+
+  public Boolean equals(Record other) {...}
+  public int hash() {...}
+  public static Record parseXML(String xml) {...}
+  public String writeXML() {...}
+}
+              </code>
+            </pre>
+            <aside class="notes">
+              Кто то приходит и говорит "а дай мне код который конвертит в XML"
+              А давай добавим toJson
+              А давай поменяем в XML немного
+            </aside>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers>
+public class Parser {
+  public Record parseXML(String xml) {...}
+  public Record parseJSON(String json) {...}
+}
+
+public class Writer {
+  public String writeXML(Record record) {...}
+  public String writeJSON(Record record) {...}
+}
+              </code>
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Open-Close Principle</h2>
+            <p class="fragment">Simply put, classes should be <span class="mark">open for extension</span>, but <span class="mark">closed for modification</span>. In doing so, we stop ourselves from modifying existing code and <span class="mark">causing potential new bugs</span> in an otherwise happy application.</p>
+            <p class="fragment mark">Of course, the one exception to the rule is when fixing bugs in existing code.</p>
+            <aside class="notes">
+              как добавить не изменяя?
+              Есть две формулировки: Bertrand Meyer и Дяди Боба (полиморфный)
+            </aside>
+          </section>
+          <section>
+            <h2>Bertrand Meyer's</h2>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="1-3|6|8-9">
+public class Parser {
+  public Record parse(String xml) {...}
+}
+
+public class DapParser extends Parser{
+  @Override
+  public Record parse(String xml) {
+    Record rec = super.parse(xml);
+    normalize(rec);
+    return rec;
+  }
+}
+              </code>
+            </pre>
+          </section>
+          <section>
+            <h2>Robert Martin's</h2>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="1-3|5-7|10|12-14">
+interface Parser {
+  public Record parse(String xml);
+}
+
+public class PseParser implements Parser{
+  public Record parse(String xml) { ... }
+}
+
+public class DapParser implements Parser{
+  Parser pseParser = new PseParser();
+  public Record parse(String xml) {
+    Record rec = pseParser.parse(xml);
+    normalize(rec);
+    return rec;
+  }
+}
+              </code>
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Liskov Substitution Principle</h2>
+            <p  class="fragment">Let <span class="mark">f(x)</span> be a property provable for objects <span class="mark">x</span> of type <span class="mark">T</span>.
+            </br>Then <span class="mark">f(y)</span> should be true for objects <span class="mark">y</span> of type <span class="mark">S</span> where <span class="mark">S</span> is a subtype of <span class="mark">T</span></p>
+            <p  class="fragment">Simply put, if class <span class="mark">A</span> is a subtype of class <span class="mark">B</span>, then we should be able to replace <span class="mark">B</span> with <span class="mark">A</span> without disrupting the behavior of our program.</p>
+          </section>
+          <section>
+            <pre>
+              <code>
+class B {
+  ...
+}
+B b = new B();
+
+class A extends B{
+  ...
+}
+A a = new A();
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code>
+public void foo(B obj) { ... }
+
+foo(b);
+foo(a);
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers>
+interface DataConnector {
+  public void write(String s);
+  public String read();
+  public void append(String s);
+}
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="1-5|7-13|10-12">
+public class FileDataConnector implements DataConnector{
+  public void write(String s) {...};
+  public String read() {...};
+  public void append(String s) {...};
+}
+
+public class GCPDataConnector implements DataConnector{
+  public void write(String s) {...};
+  public String read() {...};
+  public void append(String s) { 
+    throw new NotImplementedException() 
+  };
+}
+              </code>
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Interface Segregation Principle</h2>
+            <p class="fragment">It simply means that <span class="mark">larger interfaces</span> should be split into <span class="mark">smaller</span> ones. By doing so, we can ensure that implementing classes only need to be concerned about the methods that are of interest to them.</p>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="1-4|6-8">
+interface DataConnector {
+  public void write(String s);
+  public String read();
+}
+
+interface AppendableDataConnector extends DataConnector {
+  public void append(String s);
+}
+              </code>
+            </pre>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="1-5|7-10">
+public class FileDataConnector implements AppendableDataConnector{
+  public void write(String s) {...};
+  public String read() {...};
+  public void append(String s) {...};
+}
+
+public class GCPDataConnector implements DataConnector {
+  public void write(String s) {...};
+  public String read() {...};
+}
+              </code>
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Dependency Inversion Principle</h2>
+            <p><span class="fragment">Dependency Injection</span>&nbsp;&nbsp;&nbsp;<span class="fragment">Inversion of Control</span></p>
+            <p class="fragment">The principle of Dependency Inversion refers to the decoupling of software modules.</p>
+            <ul>
+              <li class="fragment"><span class="mark">High-level</span> modules should not depend on <span class="mark">low-level</span> modules. Both should depend on <span class="mark">abstractions.</span></li>
+              <li class="fragment"><span class="mark">Abstractions</span> should not depend on <span class="mark">details</span> (concrete implementation). <span class="mark">Details</span> should depend on <span class="mark">abstractions.</span></li>
+            </ul>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="|3">
+class Dime {
+  public void run() {
+    FileDataConnector dc = new FileDataConnector();
+    ... 
+    ds.write(record);
+  }
+}
+              </code>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="|3|9-14">
+class Dime {
+  public void run() {
+    DataConnector dc = DataConnectorFactory.createInstamce();
+    ... 
+    ds.write(record);
+  }
+}
+
+class DataConnectorFactory {
+  public DataConnector createInstamce() {
+    if (...) { return FileDataConnector; }
+    else { return GCPDataConnector;}
+  }
+}
+              </code>
+          </section>
+          <section>
+            <pre>
+              <code data-trim data-noescape data-line-numbers="|2">
+class Dime {
+  public void run(DataConnector dc) {
+    ...
+    ds.write(record);
+  }
+}
+              </code>
+          </section>
+        </section>
+        <section><h2>Questions?</h2></section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+        // The "normal" size of the presentation, aspect ratio will
+        // be preserved when the presentation is scaled to fit different
+        // resolutions. Can be specified using percentage units.
+        width: 960,
+        height: 700,
+
+        // Factor of the display size that should remain empty around
+        // the content
+        margin: 0.04,
+
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+        maxScale: 2.0,
+				hash: true,
+        slideNumber: true,
+        center: false,
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
