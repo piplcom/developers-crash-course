@@ -1,7 +1,11 @@
 ## The Art of <!-- .element: style="-webkit-text-stroke: 2px black" -->
 # Clean Code  <!-- .element: style="-webkit-text-stroke: 2px black" -->
 
+Matan Keidar
+
 <!-- .slide: data-background-image="https://media.giphy.com/media/26tn33aiTi1jkl6H6/giphy.gif" -->
+
+<img src="https://assets-global.website-files.com/5d84dd1eb32e460fb41fbbdd/5da64dd3bb438c046c3320dc_pipl_logo_blue.svg" width="80px">
 
 ---
 
@@ -22,7 +26,24 @@
 
 ## Why clean code matters?
 
-<img src="https://i2.wp.com/commadot.com/wp-content/uploads/2009/02/wtf.png?w=550&ssl=1">
+<img src="https://i2.wp.com/commadot.com/wp-content/uploads/2009/02/wtf.png?w=550&ssl=1"> 
+
+----
+
+## Clean Code Matters
+True cost of software == its maintenance
+
+<img src="https://www.researchgate.net/profile/Eduardo_Franco11/publication/306363434/figure/fig3/AS:397858684588035@1471868310610/Software-product-maintainability-behavior-over-time.png" height=10% width=80%> <!-- .element class="fragment fade-up" data-fragment-index="0" -->
+
+----
+
+# Clean Code Matters
+We READ 10x more time than we WRITE
+
+<br>
+
+### Boyscout rule 🏅 <!-- .element class="fragment" data-fragment-index="1" -->
+Always check-in cleaner code than you found <!-- .element class="fragment" data-fragment-index="1" -->
 
 ----
 
@@ -35,20 +56,11 @@
 
 ----
 
-## Clean Code Matters
-True cost of software == its maintenance
+## What prevents clean code?
+Number 1 reason: 
+> "I'll clean it up later." <!-- .element class="fragment" -->
 
-<img src="https://www.researchgate.net/profile/Eduardo_Franco11/publication/306363434/figure/fig3/AS:397858684588035@1471868310610/Software-product-maintainability-behavior-over-time.png" height=10% width=80%>
-
-----
-
-# Clean Code Matters
-We READ 10x more time than we WRITE
-
-<br>
-
-### Boyscout rule  🏅 <!-- .element class="fragment" data-fragment-index="1" -->
-Always check-in cleaner code than you found <!-- .element class="fragment" data-fragment-index="1" -->
+Pro tip: "Later" never comes. 🤦‍♂️ <!-- .element class="fragment" -->
 
 ---
 
@@ -57,11 +69,11 @@ Always check-in cleaner code than you found <!-- .element class="fragment" data-
 
 ----
 
-## Functions
+## Functions 
 
-- Functions are verbs
+- Functions are verbs 
     - `product(), transaction()` <!-- .element: class="fragment strike" -->
-    - <!-- .element: class="fragment" --> `searchProduct(), doTransaction()`
+    - searchProduct(), doTransaction() <!-- .element: class="fragment" -->
 - <!-- .element: class="fragment" --> Boolean names should answer yes/no:
     - `isGoldClient()`
     - `isHostValid()`
@@ -106,10 +118,48 @@ Unless it's a basic business concept  (like VAT) <!-- .element: class="fragment"
 
 ----
 
+### Names should be Searchable 🕵️‍♂️
+
+- This is one of our daily routines
+- Make it easy on yourself and other team members
+
+----
+
 ### Names should be consistent
 `find()`,`fetch()` or `get()`?
 
 Stick to naming conventions
+
+----
+
+### Naming Considerations
+- Should we use variable type in its name?
+  ```scala
+    val parentAccount: Account
+    val resetButton: Button
+  ```
+
+- Plural names for arrays/collections:
+  - List/Set can be omitted if contain unique type
+  ```scala
+  val users: List[User] // and not userList
+  val followUps: List[FollowUp]
+  val accoundIds: Set[Id]
+  ```
+
+----
+
+## No Magic Numbers 🪄
+- Use constants instead of hard-coded literals
+  ```scala
+  val DAYS_IN_WEEK = 7
+  val COMPANY_CODE_ITALY = 485
+  ```
+- Give them descriptive names
+- Convention: defined at the top of the scope
+- <!-- .element: class="fragment" --> Easier to reason about the code
+- <!-- .element: class="fragment" --> Easier to update values
+- <!-- .element: class="fragment" --> Easier to test 
 
 ---
 
@@ -359,6 +409,49 @@ def updateUser(request: Request) = {
     // code for updating user
 }
 ```
+
+---
+
+## Clean Conditionals 
+
+----
+
+## Encapsulate conditionals
+### Bad 👿
+```scala
+if (timer.hasExpired && !timer.isRecurrent)
+``` 
+
+### Good 😇
+```scala
+if ( shouldBeDeleted(timer) )
+``` 
+
+----
+
+## Encapsulate Boundary conditionals
+### Bad 👿
+```scala
+if ( level + 1 < tags.size )
+``` 
+
+### Good 😇
+```scala
+if ( nextLevel < tags.size )
+``` 
+
+----
+
+## Avoid Negative conditionals
+### Bad 👿
+```scala
+if ( !followUpNeeded() )
+``` 
+
+### Good 😇
+```scala
+if ( followUpNotNeeded() )
+``` 
 
 ---
 
